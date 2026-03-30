@@ -82,7 +82,16 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task04_FirstAnalyticsCourse()
     {
-        throw NotImplemented(nameof(Task04_FirstAnalyticsCourse));
+        var course = UniversityData.Courses.FirstOrDefault(c => c.Category == "Analytics");
+
+        if (course != null)
+        {
+            yield return $"{course.Title} (Start Date: {course.StartDate:yyyy-MM-dd})";
+        }
+        else
+        {
+            yield return "No Analytics course found.";
+        }
     }
 
     /// <summary>
@@ -99,7 +108,9 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task05_IsThereAnyInactiveEnrollment()
     {
-        throw NotImplemented(nameof(Task05_IsThereAnyInactiveEnrollment));
+        bool hasInactiveEnrollments = UniversityData.Enrollments.Any(e => !e.IsActive);
+        
+        yield return hasInactiveEnrollments ? "Yes" : "No";
     }
 
     /// <summary>
@@ -114,7 +125,9 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task06_DoAllLecturersHaveDepartment()
     {
-        throw NotImplemented(nameof(Task06_DoAllLecturersHaveDepartment));
+        bool allHaveDepartment = UniversityData.Lecturers.All(l => !string.IsNullOrWhiteSpace(l.Department));
+        
+        yield return allHaveDepartment ? "Yes" : "No";
     }
 
     /// <summary>
@@ -128,7 +141,9 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task07_CountActiveEnrollments()
     {
-        throw NotImplemented(nameof(Task07_CountActiveEnrollments));
+        int activeCount = UniversityData.Enrollments.Count(e => e.IsActive);
+        
+        yield return activeCount.ToString();
     }
 
     /// <summary>
@@ -142,7 +157,15 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task08_DistinctStudentCities()
     {
-        throw NotImplemented(nameof(Task08_DistinctStudentCities));
+        var distinctCities = UniversityData.Students
+            .Select(s => s.City)
+            .Distinct()
+            .OrderBy(city => city);
+
+        foreach (var city in distinctCities)
+        {
+            yield return city;
+        }
     }
 
     /// <summary>
@@ -155,9 +178,16 @@ public sealed class LinqExercises
     /// FROM Enrollments
     /// ORDER BY EnrollmentDate DESC;
     /// </summary>
-    public IEnumerable<string> Task09_ThreeNewestEnrollments()
+    p public IEnumerable<string> Task09_ThreeNewestEnrollments()
     {
-        throw NotImplemented(nameof(Task09_ThreeNewestEnrollments));
+        var newestEnrollments = UniversityData.Enrollments
+            .OrderByDescending(e => e.EnrollmentDate)
+            .Take(3);
+
+        foreach (var enrollment in newestEnrollments)
+        {
+            yield return $"Date: {enrollment.EnrollmentDate:yyyy-MM-dd} | Student ID: {enrollment.StudentId} | Course ID: {enrollment.CourseId}";
+        }
     }
 
     /// <summary>
@@ -173,7 +203,18 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task10_SecondPageOfCourses()
     {
-        throw NotImplemented(nameof(Task10_SecondPageOfCourses));
+        int pageSize = 2;
+        int pageNumber = 2; 
+        
+        var secondPageCourses = UniversityData.Courses
+            .OrderBy(c => c.Title)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
+
+        foreach (var course in secondPageCourses)
+        {
+            yield return $"{course.Title} | Category: {course.Category}";
+        }
     }
 
     /// <summary>
